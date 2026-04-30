@@ -16,13 +16,13 @@ export const getGeminiModel = (systemPrompt, keyIndex = 0) => {
   // Use the requested index, wrapped around to stay within bounds
   const apiKey = keys[keyIndex % keys.length];
   
+  // Force stable v1 API version for 1.5-flash
   const client = new GoogleGenerativeAI(apiKey);
   
   return client.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-1.5-flash",
     systemInstruction: systemPrompt,
-    tools: [{ googleSearch: {} }],
-  });
+  }, { apiVersion: 'v1' });
 };
 
 export const extractGroundingSources = (response) => {
