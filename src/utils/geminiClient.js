@@ -1,21 +1,24 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-let genAI = null;
+const getKeys = () => {
+  const keys = [
+    import.meta.env.VITE_GEMINI_API_KEY,
+    import.meta.env.VITE_GEMINI_API_KEY_2,
+    import.meta.env.VITE_GEMINI_API_KEY_3
+  ].filter(Boolean).map(key => key.startsWith('AIza') ? key : 'AIza' + key);
+  return keys;
+};
 
-export const getGeminiModel = (systemPrompt) => {
-  let apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) return null;
+export const getGeminiModel = (systemPrompt, keyIndex = 0) => {
+  const keys = getKeys();
+  if (keys.length === 0) return null;
   
-  // Anti-leak obfuscation: if the key doesn't start with AIza, prepend it.
-  if (!apiKey.startsWith('AIza')) {
-    apiKey = 'AIza' + apiKey;
-  }
+  // Use the requested index, wrapped around to stay within bounds
+  const apiKey = keys[keyIndex % keys.length];
   
-  if (!genAI) {
-    genAI = new GoogleGenerativeAI(apiKey);
-  }
+  const client = new GoogleGenerativeAI(apiKey);
   
-  return genAI.getGenerativeModel({
+  return client.getGenerativeModel({
     model: "gemini-2.0-flash",
     systemInstruction: systemPrompt,
     tools: [{ googleSearch: {} }],

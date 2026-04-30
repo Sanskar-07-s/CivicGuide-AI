@@ -50,53 +50,67 @@ const ChatAssistant = ({ initialProfile }) => {
     setMessages(prev => [...prev, { role: 'user', content: textToSend }]);
     setIsLoading(true);
 
-    try {
-      const systemPrompt = buildSystemPrompt(country, mode, lang, userState, userType);
-      const model = getGeminiModel(systemPrompt);
-      
-      if (!model) {
-        setTimeout(() => {
-          setMessages(prev => [...prev, { 
-            role: 'assistant', 
-            content: "I'm running in demo mode (API key missing). Please add VITE_GEMINI_API_KEY to .env!" 
-          }]);
-          setIsLoading(false);
-        }, 1500);
-        return;
-      }
+    let retryCount = 0;
+    const maxRetries = 2; // Will try up to 3 keys total
 
-      const historyMessages = messages
-        .filter(m => m.role !== 'assistant' || (!m.content.includes('demo mode') && !m.content.includes('Sorry, I encountered an error')))
-        .map(msg => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }],
-        }));
+    while (retryCount <= maxRetries) {
+      try {
+        const systemPrompt = buildSystemPrompt(country, mode, lang, userState, userType);
+        const model = getGeminiModel(systemPrompt, retryCount);
+        
+        if (!model) {
+          throw new Error('API_KEY_MISSING');
+        }
 
-      if (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
-        historyMessages.shift();
-      }
+        const historyMessages = messages
+          .filter(m => m.role !== 'assistant' || (!m.content.includes('demo mode') && !m.content.includes('Sorry, I encountered an error')))
+          .map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }],
+          }));
 
-      const chat = model.startChat({ history: historyMessages });
-      const result = await chat.sendMessage(textToSend);
-      const responseText = result.response.text();
-      const sources = extractGroundingSources(result.response);
-      
-      setMessages(prev => [...prev, { role: 'assistant', content: responseText, sources }]);
+        if (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
+          historyMessages.shift();
+        }
 
-      if (mode === 'chat' && messages.filter(m => m.role === 'user').length === 0) {
-        updateStats(false, country); // Just trigger badge check for using the app
+        const chat = model.startChat({ history: historyMessages });
+        const result = await chat.sendMessage(textToSend);
+        const responseText = result.response.text();
+        const sources = extractGroundingSources(result.response);
+        
+        setMessages(prev => [...prev, { role: 'assistant', content: responseText, sources }]);
+
+        if (mode === 'chat' && messages.filter(m => m.role === 'user').length === 0) {
+          updateStats(false, country);
+        }
+        
+        break; // Success! Exit the retry loop.
+
+      } catch (error) {
+        console.error(`Chat Error (Attempt ${retryCount + 1}):`, error);
+        
+        const isRateLimit = error.message?.includes('429') || error.message?.includes('Quota exceeded');
+        const isAuthError = error.message?.includes('403') || error.message?.includes('API key expired') || error.message?.includes('API_KEY_INVALID');
+
+        if ((isRateLimit || isAuthError) && retryCount < maxRetries) {
+          retryCount++;
+          console.log(`Rotating to API key #${retryCount + 1}...`);
+          continue; // Try with the next key
+        }
+
+        let errorMessage = 'Sorry, I encountered an error. Please try again later.';
+        if (isRateLimit) {
+          errorMessage = 'I am currently experiencing high traffic and have reached my rate limit. Please wait a moment and try again!';
+        } else if (error.message === 'API_KEY_MISSING') {
+          errorMessage = "I'm running in demo mode (API key missing). Please add VITE_GEMINI_API_KEY to your environment!";
+        }
+        
+        setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
+        break; // Stop retrying on other errors or after max retries
       }
-      
-    } catch (error) {
-      console.error("Chat Error:", error);
-      let errorMessage = 'Sorry, I encountered an error. Please try again later.';
-      if (error.message?.includes('429') || error.message?.includes('Quota exceeded')) {
-        errorMessage = 'I am currently experiencing high traffic and have reached my rate limit. Please wait a moment and try again!';
-      }
-      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
-    } finally {
-      setIsLoading(false);
     }
+    
+    setIsLoading(false);
   };
 
   const handleKeyPress = (e) => {
