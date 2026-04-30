@@ -5,14 +5,11 @@ export const getGeminiModel = (systemPrompt) => {
   if (!apiKey) return null;
   
   // Ensure the key has the correct prefix
-  if (!apiKey.startsWith('AIza')) {
-    apiKey = 'AIza' + apiKey;
-  }
-  
-  const genAI = new GoogleGenerativeAI(apiKey);
+  // Hard-force the stable v1 endpoint in the constructor
+  const genAI = new GoogleGenerativeAI(apiKey, { apiVersion: 'v1' });
   
   return genAI.getGenerativeModel({
-    model: "models/gemini-1.5-flash",
+    model: "gemini-1.5-flash",
     systemInstruction: systemPrompt,
   });
 };
