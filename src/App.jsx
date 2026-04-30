@@ -63,10 +63,15 @@ const App = () => {
     setShowOnboarding(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('civicguide_onboarded');
-    localStorage.removeItem('civicguide_profile');
-    setShowOnboarding(true);
+  const handleReset = () => {
+    const confirmed = window.confirm(
+      "This will reset your preferences and start over. Continue?"
+    );
+    if (confirmed) {
+      localStorage.removeItem('civicguide_onboarded');
+      localStorage.removeItem('civicguide_profile');
+      setShowOnboarding(true);
+    }
   };
 
   const lang = userProfile?.lang || 'English';
@@ -86,7 +91,7 @@ const App = () => {
       <div className="top-nav">
         {!showOnboarding && (
           <button 
-            onClick={handleLogout} 
+            onClick={handleReset} 
             style={{ 
               background: 'var(--card-bg)', 
               color: 'var(--text-primary)',
@@ -102,7 +107,7 @@ const App = () => {
             }}
             aria-label={t.logout}
           >
-            <LogOut size={16} /> {t.logout}
+            {t.logout}
           </button>
         )}
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />

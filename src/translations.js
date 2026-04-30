@@ -21,7 +21,7 @@ export const translations = {
       heroTitle: "Democracy, Simplified.",
       heroSubtitle: "Follow our interactive timeline to ensure your voice is heard. From registration to ballot casting, we've got you covered.",
       footer: "This is an informational assistant. Always verify deadlines with your local election office.",
-      logout: "Log out",
+      logout: "⚙️ Change Preferences",
       learnMore: "Learn More",
       nextStep: "Next Step"
     },
@@ -98,7 +98,7 @@ export const translations = {
       heroTitle: "लोकतंत्र, सरल।",
       heroSubtitle: "यह सुनिश्चित करने के लिए हमारी इंटरैक्टिव टाइमलाइन का पालन करें कि आपकी आवाज़ सुनी जाए। पंजीकरण से लेकर वोट डालने तक, हमने आपको कवर किया है।",
       footer: "यह एक सूचनात्मक सहायक है। हमेशा अपने स्थानीय चुनाव कार्यालय से समय सीमा की पुष्टि करें।",
-      logout: "लॉग आउट",
+      logout: "⚙️ प्राथमिकताएं बदलें",
       learnMore: "और जानें",
       nextStep: "अगला कदम"
     },
