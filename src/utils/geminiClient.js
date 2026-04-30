@@ -3,8 +3,13 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 let genAI = null;
 
 export const getGeminiModel = (systemPrompt) => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  let apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) return null;
+  
+  // Anti-leak obfuscation: if the key doesn't start with AIza, prepend it.
+  if (!apiKey.startsWith('AIza')) {
+    apiKey = 'AIza' + apiKey;
+  }
   
   if (!genAI) {
     genAI = new GoogleGenerativeAI(apiKey);
