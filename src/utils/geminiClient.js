@@ -19,7 +19,7 @@ export const getGeminiModel = (systemPrompt, keyIndex = 0) => {
   const client = new GoogleGenerativeAI(apiKey);
   
   return client.getGenerativeModel({
-    model: "gemini-1.5-flash-latest",
+    model: "gemini-2.0-flash-exp",
     systemInstruction: systemPrompt,
     tools: [{ googleSearch: {} }],
   });
