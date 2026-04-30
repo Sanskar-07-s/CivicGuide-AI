@@ -589,7 +589,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 440px;
   height: 650px;
   max-height: calc(100vh - 8rem);
-  background: var(--bg-primary); /* Use solid primary background for maximum contrast */
+  background: var(--bg-primary) !important; /* Force solid primary background */
+  opacity: 1 !important;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
