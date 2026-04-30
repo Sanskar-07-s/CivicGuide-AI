@@ -125,7 +125,6 @@ const App = () => {
           <button 
             onClick={handleLogout} 
             style={{ 
-              marginRight: '1rem', 
               background: 'var(--card-bg)', 
               color: 'var(--text-primary)',
               border: '1px solid var(--border-color)', 
