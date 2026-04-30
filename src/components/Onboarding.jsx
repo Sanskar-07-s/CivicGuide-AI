@@ -36,6 +36,16 @@ export const Onboarding = ({ onComplete }) => {
 
           {step === 2 && (
             <motion.div key="step2" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <h2>Preferred language?</h2>
+              <div className="selection-grid">
+                <button className={`onboarding-btn ${lang === 'English' ? '' : 'secondary'}`} onClick={() => { setLang('English'); nextStep(); }}>English</button>
+                <button className={`onboarding-btn ${lang === 'Hindi' ? '' : 'secondary'}`} onClick={() => { setLang('Hindi'); nextStep(); }}>हिंदी</button>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 3 && (
+            <motion.div key="step3" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h2>Are you a first-time voter?</h2>
               <div className="selection-grid" style={{ gridTemplateColumns: '1fr' }}>
                 <button className="onboarding-btn" onClick={() => { setUserType('first-time'); nextStep(); }}>Yes, first time! 🌟</button>
@@ -44,15 +54,15 @@ export const Onboarding = ({ onComplete }) => {
             </motion.div>
           )}
 
-          {step === 3 && (
-            <motion.div key="step3" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+          {step === 4 && (
+            <motion.div key="step4" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h2>Which country's elections are you interested in?</h2>
               <div className="selection-grid">
                 <div className="selection-card" onClick={() => { setCountry('India'); nextStep(); }}>
                   <div style={{ fontSize: '3rem' }}>🇮🇳</div>
                   <h3>India</h3>
                 </div>
-                <div className="selection-card" onClick={() => { setCountry('USA'); setStep(5); }}>
+                <div className="selection-card" onClick={() => { setCountry('USA'); setStep(6); }}>
                   <div style={{ fontSize: '3rem' }}>🇺🇸</div>
                   <h3>USA</h3>
                 </div>
@@ -60,8 +70,8 @@ export const Onboarding = ({ onComplete }) => {
             </motion.div>
           )}
 
-          {step === 4 && (
-            <motion.div key="step4" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+          {step === 5 && (
+            <motion.div key="step5" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h2>Which state are you from?</h2>
               <select 
                 className="state-select" 
@@ -77,16 +87,6 @@ export const Onboarding = ({ onComplete }) => {
                 disabled={!userState}
                 style={{ opacity: !userState ? 0.5 : 1 }}
               >Continue →</button>
-            </motion.div>
-          )}
-
-          {step === 5 && (
-            <motion.div key="step5" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h2>Preferred language?</h2>
-              <div className="selection-grid">
-                <button className={`onboarding-btn ${lang === 'English' ? '' : 'secondary'}`} onClick={() => { setLang('English'); nextStep(); }}>English</button>
-                <button className={`onboarding-btn ${lang === 'Hindi' ? '' : 'secondary'}`} onClick={() => { setLang('Hindi'); nextStep(); }}>हिंदी</button>
-              </div>
             </motion.div>
           )}
 
