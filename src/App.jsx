@@ -15,66 +15,9 @@ import {
 import ChatAssistant from './components/ChatAssistant';
 import { Onboarding } from './components/Onboarding';
 import { useTheme } from './hooks/useTheme';
+import { translations } from './translations';
 import './index.css';
 
-const STEPS = [
-  {
-    id: 'registration',
-    title: 'Voter Registration',
-    icon: <CheckSquare size={24} />,
-    date: 'Sep 1 - Oct 15',
-    description: 'Ensure you are registered to vote at your current address. Check deadlines for your specific state.',
-    details: [
-      'Check your current registration status online.',
-      'Update your address if you have moved recently.',
-      'Bring necessary ID if registering in person.',
-      'Online registration is available in 42 states.'
-    ],
-    color: '#38bdf8'
-  },
-  {
-    id: 'research',
-    title: 'Candidate Research',
-    icon: <Search size={24} />,
-    date: 'Oct 15 - Nov 1',
-    description: 'Learn about the candidates, their platforms, and key ballot measures in your district.',
-    details: [
-      'Review non-partisan voter guides.',
-      'Watch local and national debates.',
-      'Understand the impacts of proposed propositions.',
-      'Check endorsements from trusted organizations.'
-    ],
-    color: '#818cf8'
-  },
-  {
-    id: 'early-voting',
-    title: 'Early Voting (Optional)',
-    icon: <Calendar size={24} />,
-    date: 'Oct 20 - Nov 4',
-    description: 'Avoid the lines by voting early if your state permits it, or request an absentee ballot.',
-    details: [
-      'Find your early voting polling location.',
-      'Check the operating hours (often different from Election Day).',
-      'Request a mail-in ballot before the deadline.',
-      'Track your mail-in ballot online.'
-    ],
-    color: '#c084fc'
-  },
-  {
-    id: 'election-day',
-    title: 'Election Day',
-    icon: <MapPin size={24} />,
-    date: 'November 5th',
-    description: 'Head to your designated polling place to cast your vote. Polls usually open at 7 AM and close at 8 PM.',
-    details: [
-      'Verify your specific polling location beforehand.',
-      'Bring required identification (varies by state).',
-      'If you are in line when polls close, STAY IN LINE.',
-      'If you encounter issues, ask for a provisional ballot.'
-    ],
-    color: '#f472b6'
-  }
-];
 
 const ThemeToggle = ({ theme, toggleTheme }) => (
   <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme">
@@ -116,6 +59,16 @@ const App = () => {
     setShowOnboarding(true);
   };
 
+  const lang = userProfile?.lang || 'English';
+  const t = translations[lang].app;
+  const STEPS_DATA = translations[lang].steps;
+  
+  const STEPS = STEPS_DATA.map((step, index) => {
+    const ICONS = [<CheckSquare size={24} />, <Search size={24} />, <Calendar size={24} />, <MapPin size={24} />];
+    const COLORS = ['#38bdf8', '#818cf8', '#c084fc', '#f472b6'];
+    return { ...step, icon: ICONS[index], color: COLORS[index] };
+  });
+
   return (
     <div className="app-container">
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
@@ -137,9 +90,9 @@ const App = () => {
               fontSize: '0.9rem',
               fontWeight: '500'
             }}
-            aria-label="Log out"
+            aria-label={t.logout}
           >
-            <LogOut size={16} /> Log out
+            <LogOut size={16} /> {t.logout}
           </button>
         )}
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
@@ -163,7 +116,7 @@ const App = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="tagline text-muted"
           >
-            Your interactive assistant for navigating the election process.
+            {t.tagline}
           </motion.p>
         </div>
       </header>
@@ -176,11 +129,10 @@ const App = () => {
           className="hero-section text-center"
         >
           <h1 className="hero-title text-gradient">
-            Democracy, Simplified.
+            {t.heroTitle}
           </h1>
           <p className="hero-subtitle text-secondary">
-            Follow our interactive timeline to ensure your voice is heard. 
-            From registration to ballot casting, we've got you covered.
+            {t.heroSubtitle}
           </p>
         </motion.section>
 
@@ -277,14 +229,14 @@ const App = () => {
                       boxShadow: `0 4px 20px ${STEPS[activeStep].color}40`
                     }}
                   >
-                    Learn More <ArrowRight size={16} />
+                    {t.learnMore} <ArrowRight size={16} />
                   </button>
                   {activeStep < STEPS.length - 1 && (
                     <button 
                       className="next-btn text-muted"
                       onClick={() => setActiveStep(prev => prev + 1)}
                     >
-                      Next Step <ChevronRight size={16} />
+                      {t.nextStep} <ChevronRight size={16} />
                     </button>
                   )}
                 </div>
@@ -295,7 +247,7 @@ const App = () => {
       </main>
 
       <footer className="footer text-muted">
-        <p>This is an informational assistant. Always verify deadlines with your local election office.</p>
+        <p>{t.footer}</p>
       </footer>
 
       <ChatAssistant initialProfile={userProfile} />

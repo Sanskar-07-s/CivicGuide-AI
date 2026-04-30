@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { INDIAN_STATES } from '../constants/states';
+import { translations } from '../translations';
 
 export const Onboarding = ({ onComplete }) => {
   const [step, setStep] = useState(1);
@@ -8,6 +9,8 @@ export const Onboarding = ({ onComplete }) => {
   const [country, setCountry] = useState(null);
   const [userState, setUserState] = useState('');
   const [lang, setLang] = useState('English');
+
+  const t = translations[lang].onboarding;
 
   const handleComplete = () => {
     localStorage.setItem('civicguide_onboarded', 'true');
@@ -28,15 +31,15 @@ export const Onboarding = ({ onComplete }) => {
           {step === 1 && (
             <motion.div key="step1" className="onboarding-content" exit={{ opacity: 0, x: -20 }}>
               <div className="onboarding-icon">🗳️</div>
-              <h2>Welcome to CivicGuide AI</h2>
-              <p style={{ color: 'var(--text-secondary)' }}>Your personal election literacy assistant</p>
-              <button className="onboarding-btn" onClick={nextStep}>Get Started →</button>
+              <h2>{t.welcome}</h2>
+              <p style={{ color: 'var(--text-secondary)' }}>{t.subWelcome}</p>
+              <button className="onboarding-btn" onClick={nextStep}>{t.start}</button>
             </motion.div>
           )}
 
           {step === 2 && (
             <motion.div key="step2" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h2>Preferred language?</h2>
+              <h2>{translations['English'].onboarding.langPrompt}</h2>
               <div className="selection-grid">
                 <button className={`onboarding-btn ${lang === 'English' ? '' : 'secondary'}`} onClick={() => { setLang('English'); nextStep(); }}>English</button>
                 <button className={`onboarding-btn ${lang === 'Hindi' ? '' : 'secondary'}`} onClick={() => { setLang('Hindi'); nextStep(); }}>हिंदी</button>
@@ -46,17 +49,17 @@ export const Onboarding = ({ onComplete }) => {
 
           {step === 3 && (
             <motion.div key="step3" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h2>Are you a first-time voter?</h2>
+              <h2>{t.firstTime}</h2>
               <div className="selection-grid" style={{ gridTemplateColumns: '1fr' }}>
-                <button className="onboarding-btn" onClick={() => { setUserType('first-time'); nextStep(); }}>Yes, first time! 🌟</button>
-                <button className="onboarding-btn secondary" onClick={() => { setUserType('experienced'); nextStep(); }}>No, I've voted before</button>
+                <button className="onboarding-btn" onClick={() => { setUserType('first-time'); nextStep(); }}>{t.yesFirst}</button>
+                <button className="onboarding-btn secondary" onClick={() => { setUserType('experienced'); nextStep(); }}>{t.noVoted}</button>
               </div>
             </motion.div>
           )}
 
           {step === 4 && (
             <motion.div key="step4" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h2>Which country's elections are you interested in?</h2>
+              <h2>{t.country}</h2>
               <div className="selection-grid">
                 <div className="selection-card" onClick={() => { setCountry('India'); nextStep(); }}>
                   <div style={{ fontSize: '3rem' }}>🇮🇳</div>
@@ -72,13 +75,13 @@ export const Onboarding = ({ onComplete }) => {
 
           {step === 5 && (
             <motion.div key="step5" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h2>Which state are you from?</h2>
+              <h2>{t.state}</h2>
               <select 
                 className="state-select" 
                 value={userState} 
                 onChange={(e) => setUserState(e.target.value)}
               >
-                <option value="" disabled>Select your state</option>
+                <option value="" disabled>{t.selectState}</option>
                 {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
               <button 
@@ -86,16 +89,16 @@ export const Onboarding = ({ onComplete }) => {
                 onClick={nextStep}
                 disabled={!userState}
                 style={{ opacity: !userState ? 0.5 : 1 }}
-              >Continue →</button>
+              >{t.continue}</button>
             </motion.div>
           )}
 
           {step === 6 && (
             <motion.div key="step6" className="onboarding-content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
               <div className="onboarding-icon">🎉</div>
-              <h2>You're all set!</h2>
-              <p style={{ color: 'var(--text-secondary)' }}>Let's make your vote count. {country === 'India' ? '🇮🇳' : '🇺🇸'}</p>
-              <button className="onboarding-btn" onClick={handleComplete}>Open CivicGuide →</button>
+              <h2>{t.allSet}</h2>
+              <p style={{ color: 'var(--text-secondary)' }}>{t.makeVoteCount} {country === 'India' ? '🇮🇳' : '🇺🇸'}</p>
+              <button className="onboarding-btn" onClick={handleComplete}>{t.openCivic}</button>
             </motion.div>
           )}
         </AnimatePresence>
