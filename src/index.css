@@ -1022,3 +1022,119 @@ h1, h2, h3, h4, h5, h6 {
   70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
+
+/* Comprehensive Responsive Design for Mobile & Tablet */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 1rem;
+    gap: 2rem;
+  }
+  
+  .top-nav {
+    top: 0.5rem;
+    right: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .top-nav button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .brand {
+    font-size: 1.25rem;
+  }
+  
+  .hero-section {
+    padding: 1.5rem 0;
+  }
+  
+  .hero-title {
+    font-size: 2.25rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .step-details-container {
+    padding: 1.5rem;
+    min-height: auto;
+  }
+  
+  .step-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .step-icon-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+  }
+  
+  .step-detail-title {
+    font-size: 1.75rem;
+  }
+  
+  .step-description {
+    font-size: 1rem;
+  }
+  
+  .action-title {
+    font-size: 1.1rem;
+  }
+  
+  .action-item {
+    font-size: 0.95rem;
+  }
+  
+  .step-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding-top: 1.5rem;
+  }
+  
+  .primary-btn {
+    justify-content: center;
+  }
+  
+  .next-btn {
+    justify-content: center;
+  }
+  
+  .selection-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chat-fab {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .chat-window {
+    width: calc(100vw - 2rem);
+    height: calc(100vh - 5rem);
+    right: 1rem;
+    bottom: 4rem;
+  }
+  
+  .glass-panel {
+    padding: 1.5rem !important; /* Override inline styles in modal */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .step-detail-title {
+    font-size: 1.5rem;
+  }
+}
