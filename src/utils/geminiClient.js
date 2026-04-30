@@ -6,19 +6,15 @@ export const getGeminiModel = (systemPrompt) => {
     startChat: ({ history }) => ({
       sendMessage: async (text) => {
         const fullKey = apiKey.startsWith('AIza') ? apiKey : 'AIza' + apiKey;
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${fullKey}`;
+        // Using v1beta and 2.0-flash as it's the only one that didn't 404 today
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${fullKey}`;
         
-        // Merge system prompt into the first message for maximum compatibility
-        const contents = [...history];
-        if (contents.length === 0) {
-          contents.push({
-            role: 'user',
-            parts: [{ text: `${systemPrompt}\n\nUser Question: ${text}` }]
-          });
-        } else {
-          // If there is history, ensure the system prompt was in the first message or prepend it
-          contents.push({ role: 'user', parts: [{ text }] });
-        }
+        const contents = [...history.map(h => ({
+          role: h.role === 'model' ? 'model' : 'user',
+          parts: h.parts
+        }))];
+        
+        contents.push({ role: 'user', parts: [{ text: `${systemPrompt}\n\nUser Question: ${text}` }] });
 
         const response = await fetch(url, {
           method: 'POST',
@@ -49,5 +45,5 @@ export const getGeminiModel = (systemPrompt) => {
 };
 
 export const extractGroundingSources = (response) => {
-  return []; // Grounding not supported in basic REST fetch without extra config
+  return [];
 };
