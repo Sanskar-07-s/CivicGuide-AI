@@ -14,7 +14,9 @@ export const Onboarding = ({ onComplete }) => {
 
   const handleComplete = () => {
     localStorage.setItem('civicguide_onboarded', 'true');
-    onComplete({ userType, country, userState, lang });
+    const profile = { userType, country, userState, lang };
+    localStorage.setItem('civicguide_profile', JSON.stringify(profile));
+    onComplete(profile);
   };
 
   const nextStep = () => setStep(prev => prev + 1);

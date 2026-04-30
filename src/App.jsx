@@ -46,6 +46,15 @@ const App = () => {
     const onboarded = localStorage.getItem('civicguide_onboarded');
     if (!onboarded) {
       setShowOnboarding(true);
+    } else {
+      const savedProfile = localStorage.getItem('civicguide_profile');
+      if (savedProfile) {
+        try {
+          setUserProfile(JSON.parse(savedProfile));
+        } catch (e) {
+          console.error("Error parsing profile", e);
+        }
+      }
     }
   }, []);
 
@@ -56,6 +65,7 @@ const App = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('civicguide_onboarded');
+    localStorage.removeItem('civicguide_profile');
     setShowOnboarding(true);
   };
 
