@@ -1,28 +1,20 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const getKeys = () => {
-  const keys = [
-    import.meta.env.VITE_GEMINI_API_KEY,
-    import.meta.env.VITE_GEMINI_API_KEY_2,
-    import.meta.env.VITE_GEMINI_API_KEY_3
-  ].filter(Boolean).map(key => key.startsWith('AIza') ? key : 'AIza' + key);
-  return keys;
-};
-
-export const getGeminiModel = (systemPrompt, keyIndex = 0) => {
-  const keys = getKeys();
-  if (keys.length === 0) return null;
+export const getGeminiModel = (systemPrompt) => {
+  let apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) return null;
   
-  // Use the requested index, wrapped around to stay within bounds
-  const apiKey = keys[keyIndex % keys.length];
+  // Ensure the key has the correct prefix
+  if (!apiKey.startsWith('AIza')) {
+    apiKey = 'AIza' + apiKey;
+  }
   
-  // Force stable v1 API version for 1.5-flash
-  const client = new GoogleGenerativeAI(apiKey);
+  const genAI = new GoogleGenerativeAI(apiKey);
   
-  return client.getGenerativeModel({
+  return genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction: systemPrompt,
-  }, { apiVersion: 'v1' });
+  });
 };
 
 export const extractGroundingSources = (response) => {
@@ -31,7 +23,6 @@ export const extractGroundingSources = (response) => {
       ?.map(chunk => chunk.web)
       ?.filter(Boolean) ?? [];
   } catch (e) {
-    console.error("Error extracting grounding sources", e);
     return [];
   }
 };
