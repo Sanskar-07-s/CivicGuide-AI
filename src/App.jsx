@@ -9,7 +9,8 @@ import {
   ShieldCheck,
   Search,
   Moon,
-  Sun
+  Sun,
+  LogOut
 } from 'lucide-react';
 import ChatAssistant from './components/ChatAssistant';
 import { Onboarding } from './components/Onboarding';
@@ -110,11 +111,38 @@ const App = () => {
     setShowOnboarding(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('civicguide_onboarded');
+    setShowOnboarding(true);
+  };
+
   return (
     <div className="app-container">
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
 
       <div className="top-nav">
+        {!showOnboarding && (
+          <button 
+            onClick={handleLogout} 
+            style={{ 
+              marginRight: '1rem', 
+              background: 'var(--card-bg)', 
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-color)', 
+              padding: '0.5rem 1rem', 
+              borderRadius: '8px', 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.9rem',
+              fontWeight: '500'
+            }}
+            aria-label="Log out"
+          >
+            <LogOut size={16} /> Log out
+          </button>
+        )}
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       </div>
 
