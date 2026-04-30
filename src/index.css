@@ -589,7 +589,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 440px; /* Increased from 380px */
   height: 650px; /* Increased from 550px */
   max-height: calc(100vh - 8rem);
-  background: var(--card-bg);
+  background: var(--bg-secondary); /* Use opaque secondary background */
   border: 1px solid var(--border-color);
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -597,8 +597,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* Removed backdrop-filter to reduce transparency issues */
 }
 
 @media (max-width: 480px) {
