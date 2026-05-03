@@ -87,10 +87,12 @@ const ChatAssistant = ({ initialProfile }) => {
       
     } catch (error) {
       console.error("Chat Error:", error);
-      let errorMessage = 'Sorry, I encountered an error. Please try again later.';
-      if (error.message?.includes('429') || error.message?.includes('Quota exceeded')) {
-        errorMessage = 'I am currently experiencing high traffic and have reached my rate limit. Please wait a moment and try again!';
+      let errorMessage = '⚠️ Something went wrong. Please try again.';
+      
+      if (error.message?.includes('429') || error.status === 429 || error.message?.includes('quota')) {
+        errorMessage = "⏳ You've hit the rate limit. Please wait 60 seconds and try again. This is normal on the free tier!";
       }
+      
       setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
