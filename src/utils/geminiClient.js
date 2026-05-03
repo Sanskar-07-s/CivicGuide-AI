@@ -1,15 +1,19 @@
 export const getGeminiModel = (systemPrompt) => {
-  // Use ONLY the latest primary key
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) return null;
+  // Robust key detection
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : null);
+  
+  if (!apiKey) {
+    console.warn("CivicGuide: API Key missing from environment.");
+    return null;
+  }
 
   const fullKey = apiKey.startsWith('AIza') ? apiKey : 'AIza' + apiKey;
 
   return {
     startChat: ({ history }) => ({
       sendMessage: async (text) => {
-        // Using 2.0-flash-exp as it often has a separate quota pool
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${fullKey}`;
+        // Using 2.0-flash as it is the only one verified to connect today
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${fullKey}`;
         
         const contents = [...history.map(h => ({
           role: h.role === 'model' ? 'model' : 'user',
