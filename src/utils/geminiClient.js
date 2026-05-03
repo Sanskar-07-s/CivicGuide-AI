@@ -11,10 +11,10 @@ export const getGeminiModel = (systemPrompt) => {
       sendMessage: async (text) => {
         let lastError = null;
         
-        // Try each key until one works
         for (const key of keys) {
           try {
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+            // Using v1beta and 2.0-flash as it's the only one that didn't 404 today
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
             
             const contents = [...history.map(h => ({
               role: h.role === 'model' ? 'model' : 'user',
@@ -37,7 +37,6 @@ export const getGeminiModel = (systemPrompt) => {
 
             if (!response.ok) {
               const errorData = await response.json();
-              // If it's a rate limit error (429), try the next key
               if (response.status === 429) {
                 lastError = new Error('RATE_LIMIT');
                 continue;
@@ -58,7 +57,6 @@ export const getGeminiModel = (systemPrompt) => {
           }
         }
         
-        // If all keys fail
         if (lastError?.message === 'RATE_LIMIT') {
           throw new Error('I am currently experiencing high traffic and have reached my rate limit. Please wait a moment and try again!');
         }
