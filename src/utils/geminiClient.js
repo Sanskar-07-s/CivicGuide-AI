@@ -12,8 +12,8 @@ export const getGeminiModel = (systemPrompt) => {
   return {
     startChat: ({ history }) => ({
       sendMessage: async (text) => {
-        // Using 2.0-flash as it is the only one verified to connect today
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${fullKey}`;
+        // Using specific version 1.5-flash-002 on v1 for better quota stability
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-002:generateContent?key=${fullKey}`;
         
         const contents = [...history.map(h => ({
           role: h.role === 'model' ? 'model' : 'user',
